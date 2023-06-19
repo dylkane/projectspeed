@@ -1,8 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { BuilderComponent, builder, useIsPreviewing } from '@builder.io/react';
+import { BuilderComponent, builder, Builder, useIsPreviewing } from '@builder.io/react';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
+
+import dynamic from 'next/dynamic';
 
 // Replace with your Public API Key
 builder.init("6fe2db1df8404738be3cd2529a2b6bbe");
@@ -38,6 +40,19 @@ export async function getStaticPaths() {
     fallback: true,
   };
 }
+
+Builder.registerComponent(
+  dynamic(() =>
+    import('../components/Header').then(module => {
+      return module.Header as React.ComponentType;
+    })
+  ),
+  {
+    name: 'Header',
+    // inputs: [{ name: 'title', type: 'text' }],
+    // image: 'https://tabler-icons.io/static/tabler-icons/icons-png/3d-cube-sphere-off.png'
+  }
+)
 
 export default function Page({ page }: any) {
   const router = useRouter();
