@@ -1,10 +1,12 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { BuilderComponent, builder, Builder, useIsPreviewing } from '@builder.io/react';
+import { BuilderComponent, builder, Builder, withChildren, useIsPreviewing } from '@builder.io/react';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
-
 import dynamic from 'next/dynamic';
+
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
 // Replace with your Public API Key
 builder.init("6fe2db1df8404738be3cd2529a2b6bbe");
@@ -43,14 +45,64 @@ export async function getStaticPaths() {
 
 Builder.registerComponent(
   dynamic(() =>
-    import('../components/Header').then(module => {
-      return module.Header as React.ComponentType;
+    import('../components/Hero').then(module => {
+      return withChildren(module.Hero as React.ComponentType);
     })
   ),
   {
-    name: 'Header',
-    // inputs: [{ name: 'title', type: 'text' }],
-    // image: 'https://tabler-icons.io/static/tabler-icons/icons-png/3d-cube-sphere-off.png'
+    name: 'Hero',
+    inputs: [
+      { name: 'title', type: 'text' },
+      { name: 'subtitle', type: 'text' },
+      { name: 'buttonText', type: 'text' },
+      { name: 'buttonLink', type: 'text' },
+      {
+        name: 'logos',
+        type: 'list',
+        subFields: [
+          {
+            name: 'company',
+            type: 'text',
+            defaultValue: 'New tab',
+          },
+          {
+            name: 'svg',
+            type: 'file',
+            allowedFileTypes: ['svg'] 
+          },
+          {
+            name: 'width',
+            type: 'number',
+            defaultValue: 50,
+          },
+          {
+            name: 'height',
+            type: 'number',
+            defaultValue: 50,
+          },
+          {
+            name: 'showOnMobile',
+            type: 'boolean',
+            defaultValue: true,
+          }
+        ],
+        defaultValue: [
+          {
+            company: 'Company 1',
+            svg: 'https://upload.wikimedia.org/wikipedia/commons/0/09/America_Online_logo.svg',
+            width: 50,
+            height: 50,
+            showOnMobile: true,
+          },
+        ],
+      },
+    ],
+    defaultChildren: [
+      { 
+        '@type': '@builder.io/sdk:Element',
+        component: { name: 'Text', options: { text: 'I am child text block!' } }
+      }
+    ]
   }
 )
 
@@ -70,9 +122,15 @@ export default function Page({ page }: any) {
     <>
       <Head>
         <title>{page?.data.title}</title>
+        <meta
+          name="description"
+          content="Time to eat some credit cards!"
+        />
       </Head>
+      <Header />
       {/* Render the Builder page */}
       <BuilderComponent model="page" content={page} />
+      <Footer />
     </>
   );
 }

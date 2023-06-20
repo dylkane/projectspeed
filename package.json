@@ -20,6 +20,7 @@
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
     "focus-visible": "^5.2.0",
+    "framer-motion": "^10.12.16",
     "next": "13.4.4",
     "postcss": "8.4.24",
     "postcss-focus-visible": "^6.0.4",
