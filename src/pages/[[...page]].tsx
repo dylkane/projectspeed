@@ -106,6 +106,28 @@ Builder.registerComponent(
   }
 )
 
+Builder.registerComponent(
+  dynamic(() =>
+    import('../components/Features').then(module => {
+      return withChildren(module.Features as React.ComponentType);
+    })
+  ),
+  {
+    name: 'Features',
+  }
+)
+
+Builder.registerComponent(
+  dynamic(() =>
+    import('../components/BlogPreview').then(module => {
+      return withChildren(module.BlogPreview as React.ComponentType);
+    })
+  ),
+  {
+    name: 'BlogPreview',
+  }
+)
+
 export default function Page({ page }: any) {
   const router = useRouter();
   const isPreviewing = useIsPreviewing();
